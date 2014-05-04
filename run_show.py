@@ -18,7 +18,7 @@ def get_image_files(image_dir):
     return files
 
 
-def display_image(img, screen):
+def display_image(img, screen, delay):
 
     scale_ratio = float(img.get_height()) / float(screen.get_height())
     new_w = int(img.get_width() / scale_ratio)
@@ -27,6 +27,7 @@ def display_image(img, screen):
 
     for ii in range(scaled.get_width() + screen.get_width(), 0, -5):
         screen.blit(scaled, (-1 * ii , 0))
+        pygame.time.wait(delay)
         pygame.display.flip()
 
 
@@ -39,6 +40,7 @@ def main():
     parser.add_argument("--background-colour", default="250,250,250", help="background colour")
     parser.add_argument("--resolution", default="1024x768", help="screen resolution.")
     parser.add_argument("--delay", default=5, type=int)
+    parser.add_argument("--scroll-delay", default=3, type=int, help="Millieconds to wait between image scroll.")
 
     opts = parser.parse_args()
 
@@ -56,8 +58,8 @@ def main():
     while True:
         for image_file in get_image_files(opts.image_dir):
             img = pygame.image.load(image_file).convert()
-            display_image(img, screen)
-            pygame.time.delay(opts.delay)
+            display_image(img, screen, opts.scroll_delay)
+            pygame.time.wait(opts.delay * 1000)
 
 
 if __name__ == "__main__":
